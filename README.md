@@ -6,23 +6,19 @@ requires [ChainPulse](https://github.com/informalsystems/chainpulse) for databas
 
 prometheus job example
 ```
-- job_name: 'IBC insights'
-scrape_interval: 5s
+- job_name: 'IBC Insights'
+scrape_interval: 5s  # Adjust as needed
 metrics_path: '/metrics'
 static_configs:
 - targets: ['10.114.28.180:3000']
-relabel_configs:
-- source_labels: [__name__, chain_id, src_chain, dst_chain, src_channel, dst_ch>
-regex: 'ibc_effected_packets;(.+);(.+);(.+);(.+)'
+metric_relabel_configs:
+- source_labels: [__name__]
+regex: 'ibc_(effected|uneffected|stuck)_packets'
 action: keep
-- source_labels: [__name__, chain_id, src_chain, dst_chain, src_channel, dst_ch>
-regex: 'ibc_uneffected_packets;(.+);(.+);(.+);(.+)'
-action: keep
-- source_labels: [__name__, chain_id, src_chain, dst_chain, src_channel, dst_ch>
-regex: 'ibc_stuck_packets;(.+);(.+);(.+)'
-action: keep
-- action: labeldrop
-regex: 'memo'
+- regex: 'memo'
+action: labeldrop
+- regex: 'signer'
+action: labeldrop
 ```
 
 
